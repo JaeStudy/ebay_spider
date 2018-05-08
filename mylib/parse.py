@@ -12,7 +12,18 @@ class parse():
         return re.findall(reStr,content)
 
     def parseData(self,content):
-        return None
+        title=self.parseTitle(content)
+        productId=self.parseId(content)
+        storeName=self.parseStoreName(content)
+        storeLink=self.parseStoreLink(content)
+        imgList=self.parseImg(content)
+        bigImg=self.parseBigImg(content)
+        price=self.parsePrice(content)
+        attr=self.parseAttr(content)
+        description=self.parseDescription(content)
+        location=self.parseLocation(content)
+        ship=self.parseShip(content)
+        return (imgList,bigImg,title,price,attr,description,ship)
 
     def parseNextUrl(self,content):
         reStr=re.compile(r'class="pagn-next".+?href="(.*?)"')
