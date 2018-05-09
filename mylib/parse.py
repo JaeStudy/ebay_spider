@@ -69,10 +69,13 @@ class parse:
         imgs=set()
         img=html('.tdThumb').find('img')
         if len(img)!=0:
+            imgStr=''
             for i in range(len(img)):
                 src=img.eq(i).attr('src').replace('s-l64.jpg','s-l640.jpg')
                 imgs.add(src)
-            return imgs
+            for i in imgs:
+                imgStr+='%s|'%i
+            return imgStr[0:-1]
         return ''
 
     def parsePrice(self,content):

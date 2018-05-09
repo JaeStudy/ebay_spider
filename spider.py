@@ -17,11 +17,11 @@ class spider:
                 self.urlManager.addUrls(newUrls)
                 self.urlManager.addNextUrl(nextUrl)
                 self.intoDb.collect(newData)
-                print(newData)
+                print('success')
             except Exception as e:
-                print(111)
+                print('nonono')
                 print(e)
-                pass
+                
             break
 
 root_url='https://www.ebay.com/itm/Yamaha-Grizzly-660-700-Wheel-Bearing-Greaser-fits-OEM-AB25-1496-bearings/282952351312?hash=item41e1463e50:g:ULIAAOSwmfhX2ygV&vxp=mtr'
