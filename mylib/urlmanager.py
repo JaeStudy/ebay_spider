@@ -1,6 +1,6 @@
 import requests
 
-class urlManager():
+class urlManager:
     def __init__(self):
         self.newUrls=set()
         self.oldUrls=set()
