@@ -1,5 +1,6 @@
 from pyquery import PyQuery as pq
-import re 
+import re
+import time 
 # ebay解析类
 class parse:
     def __init__(self,download):
@@ -7,13 +8,16 @@ class parse:
     # 解析总调度
     def parse(self,content):
         newUrls=self.parseUrl(content)
-        newData=self.parseData(content)
         nextUrl=self.parseNextUrl(content)
+        if not newUrls:
+            newData=self.parseData(content)
+        else:
+            newData=''
         return newUrls,newData,nextUrl
 
     # 解析商品列表所有网址
     def parseUrl(self,content):
-        reStr=re.compile(r'class="lvtitle".+?href="(.*?)"')
+        reStr=re.compile(r'class="s-item__link".+?href="(.*?)"')
         return re.findall(reStr,content)
 
     # 解析商品具体数据
@@ -39,7 +43,8 @@ class parse:
         location=self.parseLocation(content)
         # 物流
         ship=self.parseShip(content)
-        return {'title':title,'productId':productId,'storeName':storeName,'storeLink':storeLink,'imgList':imgList,'price':price,'attr':attr,'description':description,'location':location,'ship':ship}
+        createTime=time.strftime('%Y-%m-%d',time.localtime())
+        return {'title':title,'productId':productId,'storeName':storeName,'storeLink':storeLink,'imgList':imgList,'price':price,'attr':attr,'description':description,'location':location,'ship':ship,'createTime':createTime}
 
     def parseNextUrl(self,content):
         reStr=re.compile(r'class="pagn-next".+?href="(.*?)"')
@@ -58,11 +63,17 @@ class parse:
 
     def parseStoreName(self,content):
         html=pq(content)
-        return html('#mbgLink').text()
+        name=html('#mbgLink')
+        if len(name)>1:
+            return name.eq(0).text()
+        return name.text()
 
     def parseStoreLink(self,content):
         html=pq(content)
-        return html('#mbgLink').attr('href')
+        link=html('#mbgLink')
+        if len(link)>1:
+            return link.eq(0).attr('href')
+        return link.attr('href')
 
     def parseImg(self,content):
         html=pq(content)
@@ -76,6 +87,9 @@ class parse:
             for i in imgs:
                 imgStr+='%s|'%i
             return imgStr[0:-1]
+        else:
+            bigImg=html('#icImg').attr('src')
+            return bigImg
         return ''
 
     def parsePrice(self,content):
@@ -111,3 +125,6 @@ class parse:
     def parseShip(self,content):
         html=pq(content)
         return html('#shSummary').remove('#e2').find('span').text()
+
+
+
